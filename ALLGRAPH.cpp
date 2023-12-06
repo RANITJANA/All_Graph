@@ -48,6 +48,48 @@ void DFS(int V, vector<int> adj[])
     cout << endl;
 }
 
+//cucle detect
+
+//assuming there is only one component
+bool isCyclePresent_bfs(int V,vector<int>adj[]){
+	int vis[V]; //here we will store parents
+	for(int i=0;i<V;i++) vis[i]=-2;
+	queue<int> q;
+	q.push(0);
+	vis[0]=-1;
+	while(!q.empty()){
+		int node=q.front();
+		q.pop();
+		for(auto it:adj[node]){
+			if(vis[it]==-2){
+				vis[it]=node;
+				q.push(it);
+			}
+			else if(it!=vis[node]) return true;
+		}
+	}
+	return false;
+}
+
+
+bool find_dfs(int node,int parent,vector<int>adj[],int vis[]){
+	vis[node]=1;
+	for(auto it:adj[node]){
+		if(it==parent) continue;
+		if(vis[it]) return true;
+		if(find_dfs(it,node,adj,vis)) return true;
+	}
+	return false;
+}
+
+bool isCyclePresent_dfs(int V,vector<int>adj[]){
+	int vis[V]={0};
+	for(int i=0;i<V;i++){
+		if(!vis[i] && find_dfs(i,-1,adj,vis)) return true;
+	}
+	return false;
+}
+
 // special type of graph
 
 bool solveColor(int start, vector<int> adj[], int color[])
